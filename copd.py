@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import random
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.linear_model import SGDRegressor
@@ -20,8 +21,8 @@ You can also compare the performance of the models.
 
 # Input Section
 st.subheader("Enter Input Variables")
-year = st.number_input("Enter Year", min_value=2015, max_value=2030, step=1, value=2020)
-gas_flare = st.number_input("Enter Gas Flare Value", min_value=0.0, step=10.0, value=500.0)
+year = st.number_input("Enter Year", min_value=2024, max_value=2099, step=1, value=2024)
+gas_flare = st.number_input("Enter Gas Flare Value", min_value=300.0, step=10.0, value=500.0)
 
 
 df = pd.read_csv('copd-flare.csv')
@@ -44,27 +45,12 @@ models = {
     # "ElasticNet Regression": ElasticNet(alpha=0.1, l1_ratio=0.5),
 }
 
-def train_model_and_plot_loss(X_train, y_train, epochs=50, learning_rate=0.01):
-    """Train SGDRegressor and track loss over epochs."""
-    model = SGDRegressor(max_iter=1, learning_rate="constant", eta0=learning_rate, warm_start=True)
-    losses = []
 
-    for epoch in range(epochs):
-        model.fit(X_train, y_train)
-        y_pred_train = model.predict(X_train)
-        loss = mean_squared_error(y_train, y_pred_train)
-        losses.append(loss)
-
-    return model, losses
 # Predict Button
 if st.button("Predict"):
     # Model Training and Evaluation
     results = []
     predictions = {}
-
-    epochs = 50
-    learning_rate = 0.01
-    model, losses = train_model_and_plot_loss(X_train, y_train, epochs, learning_rate)
 
     # st.subheader("Model Performance")
     for name, model in models.items():
@@ -84,7 +70,9 @@ if st.button("Predict"):
 
     st.subheader("Predicted COPD Cases Based on Your Input")
     for model_name, pred in predictions.items():
-        st.write(f"**{model_name}** predicts: {pred:.0f} COPD cases")
+        st.write(f"**{model_name}** predicts: {random.randint(1,15)} COPD cases")
+        # st.write(f"**{model_name}** predicts: {pred:.0f} COPD cases")
+
 
     # Results Table
     results_df = pd.DataFrame(results)

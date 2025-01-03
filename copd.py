@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import random
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.linear_model import SGDRegressor
@@ -21,28 +20,25 @@ You can also compare the performance of the models.
 
 # Input Section
 st.subheader("Enter Input Variables")
-year = st.number_input("Enter Year", min_value=2024, max_value=2099, step=1, value=2024)
-gas_flare = st.number_input("Enter Gas Flare Value", min_value=300.0, step=10.0, value=500.0)
+year = st.number_input("Enter Year", min_value=2018, max_value=2040, step=1, value=2024)
+gas_flare = st.number_input("Enter Gas Flare Value", min_value=300.0, step=100.0, value=500.0)
 
 
-df = pd.read_csv('copd-flare.csv')
+df = pd.read_csv('environmental_health_data.csv')
 df['date'] = pd.to_datetime(df['date'])
 df['year'] = df['date'].dt.year
 # st.write(df)
 
 # Prepare Features and Target Variable
-X = df[['year', 'gas_flare']]
-y = df['cases']
+X = df[['year', 'gasflare']]
+y = df['copd_cases']
 
 # Split Data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Define Models
+# Define the Model
 models = {
     "Linear Regression": LinearRegression(),
-    # "Ridge Regression": Ridge(alpha=1.0),
-    # "Lasso Regression": Lasso(alpha=0.1),
-    # "ElasticNet Regression": ElasticNet(alpha=0.1, l1_ratio=0.5),
 }
 
 
@@ -65,12 +61,12 @@ if st.button("Predict"):
         predictions[name] = model.predict(user_input)[0]
 
         # Display model performance
-        # st.write(f"**{name}**: Mean Squared Error = {mse:.4f}, R² = {r2:.4f}")
+        st.write(f"**{name}**: Mean Squared Error = {mse:.4f}, R² = {r2:.4f}")
 
 
     st.subheader("Predicted COPD Cases Based on Your Input")
     for model_name, pred in predictions.items():
-        st.write(f"**{model_name}** predicts: {random.randint(1,15)} COPD cases")
+        st.write(f"**{model_name}** predicts: {round(pred)} COPD cases")
         # st.write(f"**{model_name}** predicts: {pred:.0f} COPD cases")
 
 
